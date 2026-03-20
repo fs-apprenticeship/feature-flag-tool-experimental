@@ -8,10 +8,10 @@ These endpoints are for admin to  view, create, and modify flags as needed. This
 
 ### List Flags
 
-Returns all flags created by an authenticated user.
+Returns all flags by project created by an authenticated user.
 
 ```
-GET /api/admin/flags 
+GET /api/admin/projects/:projectId
 ```
 
 Sample Response: 
@@ -42,7 +42,7 @@ Sample Response:
 Creates a new feature flag for the authenticated user
 
 ```
-POST /api/admin/flags
+POST /api/admin/projects/:projectId/flags
 ```
 
 Sample Request Body: 
@@ -76,7 +76,7 @@ Update a flag's name, description, and environment states.
 Note: This would be called with a save changes button and would reduce the number of calls needed when toggling on and off different environments. The same form to create a flag can also be reused since all the inputs will be the same. 
 
 ```
-PATCH /api/admin/flags/:id
+PATCH /api/admin/flags/:flagId
 ```
 
 Sample Request Body: 
@@ -107,10 +107,10 @@ These endpoints are for applications to call to retrieve flag state and evaluate
 
 ### Fetching flag values for a given environment  
 
-Returns all flag states for the specified environment. 
+Returns all flag states given a SDK key that will be passed sent in the headers. 
 
 ```
-GET /api/sdk/flags?environment=development
+GET /api/sdk/flags
 ```
 
 Sample Response: 
