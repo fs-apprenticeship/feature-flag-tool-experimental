@@ -2,11 +2,19 @@
 
 ## Getting Started
 
-Install dependencies:
+1. Clone this repo and `cd` into your clone
+1. Install dependencies
 
 ```bash
 npm install
 ```
+
+3. Install and run a local Postgres 17 server; on MacOS, use [Postgres.app](https://postgresapp.com/)
+1. Set up your local dotenv files; `cp .env{.example,} && cp .env.test{.example,}`
+1. Generate the Prisma client; `npx prisma generate`
+1. Run tests; `npm test`
+1. Set up your development DB; `npx prisma migrate dev` (or `npx prisma migrate reset`)
+1. Run the Next.js server (and [Prisma Studio](#prisma-studio)); `npm run dev`
 
 Set your database connection in `.env`:
 
