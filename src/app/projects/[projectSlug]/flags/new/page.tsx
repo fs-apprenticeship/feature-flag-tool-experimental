@@ -79,7 +79,7 @@ export default function AddNewFlagForm({ params }: { params: Promise<{ projectSl
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="form-rhf-flag-name" className="text-lg" >
-                    Flag Name <span className="text-gray-500 mx-0">*</span>
+                    Flag Name<span className="text-gray-500 mx-0">*</span>
                   </FieldLabel>
                   <Input
                     {...field}
