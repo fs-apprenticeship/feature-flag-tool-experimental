@@ -39,8 +39,12 @@ const formSchema = z.object({
   productionEnabled: z.boolean(),
 })
 
-export default function AddNewFlagForm() {
+
+
+export default function AddNewFlagForm({ params }: { params: Promise<{ projectSlug: string }> }) {
+  
   const router = useRouter()
+  const { projectSlug } = React.use(params)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,7 +62,10 @@ export default function AddNewFlagForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+    <h2 className="text-3xl font-semibold mb-5">
+      { projectSlug }
+    </h2>
     <Card className="w-full sm:max-w-xl">
       <CardHeader>
         <CardTitle className="text-xl">Create New Flag</CardTitle>
@@ -71,8 +78,8 @@ export default function AddNewFlagForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-flag-name" className="text-lg" required>
-                    Flag Name
+                  <FieldLabel htmlFor="form-rhf-flag-name" className="text-lg" >
+                    Flag Name <span className="text-gray-500 mx-0">*</span>
                   </FieldLabel>
                   <Input
                     {...field}
@@ -181,7 +188,7 @@ export default function AddNewFlagForm() {
             Back
           </Button>
           <Button type="submit" form="form-rhf-demo">
-            Submit
+            Create Flag
           </Button>
         </Field>
       </CardFooter>
