@@ -3,6 +3,8 @@ import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton } from '@cl
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+import Link from "next/link";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -37,9 +39,21 @@ export default function RootLayout({
                   Sign Up
                 </button>
               </SignUpButton>
+              <Link
+                href="/protected"
+                className="bg-blue-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 inline-flex items-center"
+              >
+                Test Protected
+              </Link>
             </Show>
             <Show when="signed-in">
               <UserButton />
+              <Link
+                href="/protected"
+                className="bg-red-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 inline-flex items-center"
+              >
+                Protected Page
+              </Link>
             </Show>
           </header>
           {children}
