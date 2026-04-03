@@ -130,7 +130,7 @@ return (
                 </Button>
         </CardAction>
                 </CardHeader>
-            <CardContent className="bg-gray-100 rounded-md p-2 mx-4 outline-1">
+            <CardContent className="bg-gray-200 rounded-md p-2 mx-4 outline-1">
                 <h2 className="mb-2 mx-1"> Environments </h2>
                 <div className="flex gap-2">
                     {flag.environments.map((type) => 
