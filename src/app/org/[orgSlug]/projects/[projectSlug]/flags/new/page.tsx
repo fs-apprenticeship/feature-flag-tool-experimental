@@ -41,10 +41,11 @@ const formSchema = z.object({
 
 
 
-export default function AddNewFlagForm({ params }: { params: Promise<{ projectSlug: string }> }) {
+export default function AddNewFlagForm({ params }: { params: Promise<{ projectSlug: string, orgSlug: string }> }) {
   
   const router = useRouter()
-  const { projectSlug } = React.use(params)
+  const { projectSlug, orgSlug } = React.use(params)
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,7 +65,7 @@ export default function AddNewFlagForm({ params }: { params: Promise<{ projectSl
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
     <h2 className="text-3xl font-semibold mb-5">
-      { projectSlug }
+      { orgSlug } / { projectSlug }
     </h2>
     <Card className="w-full sm:max-w-xl">
       <CardHeader>
@@ -87,12 +88,6 @@ export default function AddNewFlagForm({ params }: { params: Promise<{ projectSl
                     aria-invalid={fieldState.invalid}
                     placeholder="e.g. lesson-demo"
                     autoComplete="off"
-                    onChange={(e) => {
-                    const value = e.target.value
-                        .toLowerCase()
-                        .replace(/\s+/g, "-")
-                    field.onChange(value)
-                    }}
                     required
                   />
                   {fieldState.invalid && (
