@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-<<<<<<< HEAD
 import { Geist, Geist_Mono, Inter } from "next/font/google";
-=======
 import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
-import { Geist, Geist_Mono } from "next/font/google";
->>>>>>> origin/main
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
