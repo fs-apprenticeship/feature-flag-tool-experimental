@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardAction
 } from "@/components/ui/card"
-import { Trash2, Pencil, PlusIcon, Flag } from 'lucide-react';
+import { Trash2, Pencil, PlusIcon } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,10 +32,10 @@ type FeatureFlag = {
 }
 
 
-export default function FlagList({ params }: { params: Promise<{ projectSlug: string }> }) {
+export default function FlagList({ params }: { params: Promise<{ projectSlug: string, orgSlug: string }> }) {
 
     const router = useRouter()
-    const { projectSlug } = React.use(params)
+    const { projectSlug, orgSlug } = React.use(params)
 
     // const mockFlags: FeatureFlag[] = [] 
 
@@ -91,12 +91,12 @@ return (
         <div className="flex flex-col gap-5 m-10"> 
             <div className="flex justify-between">
             <h2 className="flex text-3xl font-semibold"> 
-             { projectSlug }  /  flags 
+             {orgSlug} / { projectSlug }  /  flags 
             </h2>
             <Button 
                 variant="outline"
                 size="lg"
-                onClick={(()=> router.push("/projects/fis-demo/flags/new"))}>
+                onClick={(()=> router.push("/org/flatiron-school/projects/fis-demo/flags/new"))}>
                 Create flag <PlusIcon/> 
             </Button>
         </div>
