@@ -135,7 +135,7 @@ return (
                         {flag.environments.map((type) => 
                         <Badge
                             key={type.id}
-                            className={`p-2.5 rounded-full ${type.enabled ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-zinc-500'}`}>
+                            className={`p-2.5 rounded-full ${type.enabled ? 'bg-green-50 text-green-700' : 'bg-gray-200 text-zinc-500'}`}>
                             {type.name}
                         </Badge>
                         )}
