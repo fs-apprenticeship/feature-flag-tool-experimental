@@ -37,9 +37,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={cn("font-sans", inter.variable)}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={cn("min-h-screen bg-zinc-50 dark:bg-black", geistSans.variable, geistMono.variable)}>
         <ClerkProvider>
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <Show when="signed-out">
