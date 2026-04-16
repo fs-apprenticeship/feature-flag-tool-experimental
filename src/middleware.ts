@@ -1,10 +1,12 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-const isProtectedRoute = createRouteMatcher(['/protected']);
+const isProtectedRoute = createRouteMatcher(['/protected','/org/flatiron-school/projects/fis-demo/flags']);
+
 
 export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) await auth.protect()
   });
+
 
 export const config = {
   matcher: [
