@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FeatureFlag, useGetFlags } from "@/features/flags"
+import Loader from "@/components/shared/Loader";
 
 
 interface FlagListProps {
@@ -22,6 +23,10 @@ export default function FlagList({projectSlug, orgSlug}: FlagListProps) {
 
     const router = useRouter()
     const { data: content, isLoading, error } = useGetFlags(projectSlug,orgSlug)
+
+    if (isLoading) { 
+        return <Loader />
+    }
 
     if (error?.message === "PROJECT_NOT_FOUND") {
         return <h1> Project Not Found </h1>;
@@ -37,7 +42,7 @@ return (
                 <Button 
                     variant="outline"
                     size="lg"
-                    onClick={(()=> router.push("/org/flatiron-school/projects/fis-demo/flags/new"))}>
+                    onClick={(()=> router.push("/org/example-organization/projects/sample-project/flags/new"))}>
                     Create flag <PlusIcon/> 
                 </Button>
             </div>
@@ -49,7 +54,7 @@ return (
                     <CardTitle className="bg-gray-100 rounded-sm px-2 inline-block w-fit"> 
                         {flag.name}
                     </CardTitle>
-                    <CardDescription className="px-2 py-1">
+                    <CardDescription className="px-2 py-1 min-h-12">
                         {flag.description}
                     </CardDescription>
                     <CardAction>

@@ -5,7 +5,7 @@ import { PrismaClient } from "../../generated/prisma/client";
 const connectionString = process.env.DATABASE_URL!;
 
 declare global {
-
+  // eslint-disable-next-line no-var
   var __prisma__: PrismaClient | undefined;
 }
 
