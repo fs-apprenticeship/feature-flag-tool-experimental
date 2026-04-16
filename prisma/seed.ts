@@ -50,10 +50,12 @@ async function main() {
     where: { email: "johndoe@example.com" },
     update: {
       name: "John Doe",
+      clerkId: "user_3CQB9RJIHyiQuyCcdQXlCxNKjGL",
     },
     create: {
       email: "johndoe@example.com",
       name: "John Doe",
+      clerkId: "user_3CQB9RJIHyiQuyCcdQXlCxNKjGL",
     },
   });
 
