@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <QueryProvider>
         <ClerkProvider>
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <Show when="signed-out">
@@ -61,6 +63,7 @@ export default function RootLayout({
           </header>
           {children}
         </ClerkProvider>
+        </QueryProvider>
       </body>
     </html>
   );
