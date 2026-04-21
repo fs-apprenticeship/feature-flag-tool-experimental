@@ -37,13 +37,13 @@ export default async function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", inter.variable)}>
       <body className={cn("min-h-screen bg-zinc-50 dark:bg-black", geistSans.variable, geistMono.variable)}>
-        <QueryProvider>
         <ClerkProvider>
+        <QueryProvider>
           <Navbar/> 
          
           {children}
-        </ClerkProvider>
         </QueryProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
