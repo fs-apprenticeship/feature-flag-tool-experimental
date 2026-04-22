@@ -10,7 +10,7 @@ import { Trash2, Pencil, PlusIcon } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FeatureFlag, useGetFlags } from "@/features/flags"
+import { useGetFlags } from "@/features/flags"
 import Loader from "@/components/shared/Loader";
 
 
@@ -42,7 +42,7 @@ return (
                 <Button 
                     variant="outline"
                     size="lg"
-                    onClick={(()=> router.push("/org/example-organization/projects/sample-project/flags/new"))}>
+                    onClick={(()=> router.push(`/org/${orgSlug}/projects/${projectSlug}/flags/new`))}>
                     Create flag <PlusIcon/> 
                 </Button>
             </div>
