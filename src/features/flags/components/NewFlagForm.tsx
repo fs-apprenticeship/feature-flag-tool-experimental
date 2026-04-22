@@ -235,7 +235,7 @@ export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
         </CardContent>
         <CardFooter>
             <Field orientation="horizontal">
-            <Button type="button" variant="outline" onClick={() => (router.push("/protected"))}>
+            <Button type="button" variant="outline" onClick={() => (router.push(`/org/${orgSlug}/projects/${projectSlug}/flags`))}>
                 Back
             </Button>
             <Button type="submit" form="form-rhf-demo">
