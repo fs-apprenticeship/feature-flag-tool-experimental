@@ -11,10 +11,10 @@ export default function ProtectedPage() {
           This is a protected page!
         </h1>
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-         <button onClick={()=> router.push("org/flatiron-school/projects/fis-demo/flags/new")} className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]">
+         <button onClick={()=> router.push("/org/example-organization/projects/sample-project/flags/new")} className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]">
            Create a flag
          </button>
-         <button onClick={()=> router.push("org/flatiron-school/projects/fis-demo/flags")} className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]">
+         <button onClick={()=> router.push("/org/example-organization/projects/sample-project/flags")} className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]">
            See all flags
          </button>
          </div>

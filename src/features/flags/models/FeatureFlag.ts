@@ -1,0 +1,44 @@
+export interface FlagEnvironment {
+  id: string;
+  name: string;
+  type: string;
+  enabled: boolean;
+}
+
+export interface FlagRow {
+    id: string;
+    projectId: string;
+    name: string;
+    key: string;
+    description: string; 
+    slug: string;
+    environments: Array<{
+    enabled: boolean;
+    environment: {
+    id: string;
+    name: string;
+    type: string;
+    createdAt: string;
+    updatedAt: string;
+    }}>
+}
+
+export class FeatureFlag {
+    id: string;
+    name: string;
+    key: string
+    description?: string;
+    environments: FlagEnvironment[];
+    constructor(row: FlagRow) {
+        this.id = row.id;
+        this.name = row.name;
+        this.key = row.key;
+        this.description = row.description;
+        this.environments = row.environments.map((item) => ({
+            id: item.environment.id,
+            name: item.environment.name,
+            type: item.environment.type,
+            enabled: item.enabled,
+    }));
+  }
+}

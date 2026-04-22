@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton,  } from '@clerk/nextjs'
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { QueryProvider } from "@/providers/QueryProvider";
 import Navbar from "@/components/shared/Navbar";
 // import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
@@ -37,9 +38,11 @@ export default async function RootLayout({
     <html lang="en" className={cn("font-sans", inter.variable)}>
       <body className={cn("min-h-screen bg-zinc-50 dark:bg-black", geistSans.variable, geistMono.variable)}>
         <ClerkProvider>
+        <QueryProvider>
           <Navbar/> 
          
           {children}
+        </QueryProvider>
         </ClerkProvider>
       </body>
     </html>

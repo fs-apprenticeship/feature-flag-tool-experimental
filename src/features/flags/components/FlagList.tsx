@@ -10,23 +10,9 @@ import { Trash2, Pencil, PlusIcon } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { FeatureFlag, useGetFlags } from "@/features/flags"
+import Loader from "@/components/shared/Loader";
 
-type EnvironmentType = "development" | "staging" | "production"
-
-type FlagEnvironment = {
-    id: string
-    name: string
-    type: EnvironmentType
-    enabled: boolean
-}
-
-type FeatureFlag = {
-    id: string
-    name: string
-    key: string
-    description?: string
-    environments: FlagEnvironment[]
-}
 
 interface FlagListProps {
     projectSlug: string
@@ -36,54 +22,15 @@ interface FlagListProps {
 export default function FlagList({projectSlug, orgSlug}: FlagListProps) {
 
     const router = useRouter()
-    // const mockFlags: FeatureFlag[] = [] 
+    const { data: content, isLoading, error } = useGetFlags(projectSlug,orgSlug)
 
-    const mockFlags = [{   
-    "id": 123,
-    "name": "lesson-demo",
-    "description": "This flag toggles the Lessons card on home page",
-    "environments": [
-        {   "id": "1", 
-            "name": "Development", 
-            "type": "development",
-            "enabled": true,
-        },
-        {   "id": "2", 
-            "name": "Staging", 
-            "type": "staging",
-            "enabled": false,
-        },
-         {  "id": "3",  
-            "name": "Production", 
-            "type": "production",
-            "enabled": false,
-        },
-    ]
-}
-, {
-    "id": 124,
-    "name": "lesson-plan-demo",
-    "description": "This flag toggles the Lesson Plan card on home page",
-    "environments": [
-        {   "id": "4",
-            "name": "Development", 
-            "type": "development",
-            "enabled": true,
-        },
-        {   "id": "5",
-            "name": "Staging", 
-            "type": "staging",
-            "enabled": true ,
-        },
-         {  "id": "6",
-            "name": "Production", 
-            "type": "production",
-            "enabled": true,
-        },
-        
-    ]
-},
-]
+    if (isLoading) { 
+        return <Loader />
+    }
+
+    if (error?.message === "PROJECT_NOT_FOUND") {
+        return <h1> Project Not Found </h1>;
+    }
 
 return ( 
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -95,19 +42,19 @@ return (
                 <Button 
                     variant="outline"
                     size="lg"
-                    onClick={(()=> router.push("/org/flatiron-school/projects/fis-demo/flags/new"))}>
+                    onClick={(()=> router.push("/org/example-organization/projects/sample-project/flags/new"))}>
                     Create flag <PlusIcon/> 
                 </Button>
             </div>
             <div className="flex flex-wrap gap-10"> 
-            {   mockFlags.length > 0 ?  
-                mockFlags?.map((flag) => 
+            {   content ?  
+                content.map((flag) => 
                 <Card className=" min-w-md py-5" key={flag.id}>
                 <CardHeader className="px-4 py-1">
                     <CardTitle className="bg-gray-100 rounded-sm px-2 inline-block w-fit"> 
                         {flag.name}
                     </CardTitle>
-                    <CardDescription className="px-2 py-1">
+                    <CardDescription className="px-2 py-1 min-h-12">
                         {flag.description}
                     </CardDescription>
                     <CardAction>
