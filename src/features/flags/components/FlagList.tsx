@@ -31,6 +31,7 @@ export default function FlagList({projectSlug, orgSlug}: FlagListProps) {
     if (error?.message === "PROJECT_NOT_FOUND") {
         return <h1> Project Not Found </h1>;
     }
+    console.log(content)
 
 return ( 
     <div className="min-h-screen bg-gray-100 flex flex-col">
