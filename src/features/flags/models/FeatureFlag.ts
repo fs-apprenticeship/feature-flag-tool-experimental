@@ -23,6 +23,14 @@ export interface FlagRow {
     }}>
 }
 
+export type CreateFeatureFlag = Omit<FeatureFlag, 'id' | 'environments'| 'key'>;
+
+export interface CreateFlagOptions {
+  orgSlug: string;
+  projectSlug: string;
+  data: CreateFeatureFlag;
+}
+
 export class FeatureFlag {
     id: string;
     name: string;

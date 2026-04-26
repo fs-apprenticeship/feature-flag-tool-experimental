@@ -1,9 +1,11 @@
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm, useWatch } from "react-hook-form"
 import * as z from "zod"
 import { useRouter } from "next/navigation";
-
+import { useCreateFlags } from "../hooks/useCreateFlag";
 import { Button } from "@/components/ui/button"
+import Loader from "@/components/shared/Loader";
 import {
   Card,
   CardContent,
@@ -46,9 +48,10 @@ interface NewFlagFormProps {
 
 
 export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
-  
-  const router = useRouter()
+  const { mutate, isPending, error } = useCreateFlags(orgSlug, projectSlug);
+  const errorMessage = (error as Error)?.message;
 
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,10 +76,13 @@ export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
     name: "productionExists"
   })
 
-
-  function onSubmit(data: z.infer<typeof formSchema>) {
-      console.log("Submitted",data)
-  }
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    mutate({
+        orgSlug: orgSlug,       
+        projectSlug: projectSlug, 
+        data: data         
+    });
+    }
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
@@ -108,6 +114,9 @@ export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
                     />
                     {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
+                    )}
+                    {errorMessage && (
+                        <p className="text-red-700"> {errorMessage} </p>
                     )}
                     </Field>
                 )}
@@ -164,7 +173,7 @@ export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
                         render={({ field }) => (
                             <Field orientation="vertical" className="min-h-16">
                                 <FieldLabel htmlFor="form-rhf-stage" className="text-md my-0"> Staging 
-                                    <Button size="xs" variant="ghost" className="w-fit"
+                                    <Button size="xs" variant="ghost" className="w-fit" type="button"
                                             onClick={() => {
                                                 form.setValue("stagingExists", false)
                                                 form.setValue("stagingEnabled", false)
@@ -197,7 +206,7 @@ export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
                     render={({ field }) => (
                         <Field orientation="vertical">
                             <FieldLabel>Production
-                                <Button size="xs" variant="ghost" className="w-fit"
+                                <Button size="xs" variant="ghost" className="w-fit" type="button"
                                             onClick={() => {
                                                 form.setValue("productionExists", false)
                                                 form.setValue("productionEnabled", false)
@@ -226,11 +235,13 @@ export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
         </CardContent>
         <CardFooter>
             <Field orientation="horizontal">
-            <Button type="button" variant="outline" onClick={() => (router.push("/protected"))}>
+            <Button type="button" variant="outline" onClick={() => (router.push(`/org/${orgSlug}/projects/${projectSlug}/flags`))}>
                 Back
             </Button>
             <Button type="submit" form="form-rhf-demo">
-                Create Flag
+              {isPending ? 
+              <Loader/> : 
+              <p> Create Flag</p>} 
             </Button>
             </Field>
         </CardFooter>
