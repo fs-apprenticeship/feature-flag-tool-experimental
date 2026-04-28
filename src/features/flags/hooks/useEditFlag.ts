@@ -16,7 +16,7 @@ export const useEditFlags = (orgSlug: string, projectSlug: string) => {
 
     onSuccess: (updatedFlag) => {
       queryClient.setQueryData(
-        flagKeys.list(orgSlug, projectSlug),
+        flagKeys.list(),
         (old: FeatureFlag[] = []) =>
           old.map((flag) =>
             flag.id === updatedFlag.id ? updatedFlag : flag
