@@ -50,3 +50,27 @@ export class FeatureFlag {
     }));
   }
 }
+
+export interface UpdateFeatureFlag {
+  name: string;
+  description?: string;
+  environments: {
+    environmentId: string;
+    enabled: boolean;
+  }[];
+}
+
+
+
+export interface EditFlagOptions {
+  orgSlug: string;
+  projectSlug: string;
+  flagId: string;
+  data: UpdateFeatureFlag;
+}
+
+export interface DeleteFlagOptions {
+  orgSlug: string;
+  projectSlug: string;
+  flagId: string;
+}
