@@ -10,25 +10,28 @@ import { Trash2, Pencil, PlusIcon } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useGetFlags } from "@/features/flags"
 import Loader from "@/components/shared/Loader";
+import { useGetEnvironment } from "@/features/environments/hooks/useGetEnvironments";
 
-
-interface FlagListProps {
+interface EnvironmentListProps {
     projectSlug: string
     orgSlug: string
 }
 
-export default function FlagList({projectSlug, orgSlug}: FlagListProps) {
+export default function EnvironmentList({projectSlug, orgSlug}: EnvironmentListProps) {
 
     const router = useRouter()
-    const { data: content, isLoading, error } = useGetFlags(projectSlug,orgSlug)
+    const { 
+    data: environments, 
+    isLoading: isEnvsLoading, 
+    error: envsError
+} = useGetEnvironment(projectSlug, orgSlug)
 
-    if (isLoading) { 
+    if (isEnvsLoading) { 
         return <Loader />
     }
 
-    if (error?.message === "PROJECT_NOT_FOUND") {
+    if (envsError?.message === "PROJECT_NOT_FOUND") {
         return <h1> Project Not Found </h1>;
     }
 
@@ -37,33 +40,25 @@ return (
         <div className="flex flex-col gap-5 m-10"> 
             <div className="flex justify-between">
                 <h2 className="flex text-3xl font-semibold"> 
-                {orgSlug} / { projectSlug }  /  flags 
+                {orgSlug} / { projectSlug }  / environments
                 </h2>
                 <Button 
                     variant="outline"
                     size="lg"
                     onClick={(()=> router.push(`/org/${orgSlug}/projects/${projectSlug}/flags/new`))}>
-                    Create flag <PlusIcon/> 
-                </Button>
-            </div>
-            <div>
-            <Button 
-                variant="outline"
-                size="lg"
-                onClick={(()=> router.push(`/org/${orgSlug}/projects/${projectSlug}/environments`))}>
-                Edit Environments 
+                    Create Environment <PlusIcon/> 
                 </Button>
             </div>
             <div className="flex flex-wrap gap-10"> 
-            {   content ?  
-                content.map((flag) => 
-                <Card className=" min-w-md py-5" key={flag.id}>
+            {   environments ?  
+                environments.map((env) => 
+                <Card className=" min-w-md py-5" key={env.id}>
                 <CardHeader className="px-4 py-1">
                     <CardTitle className="bg-gray-100 rounded-sm px-2 inline-block w-fit"> 
-                        {flag.name}
+                        {env.name}
                     </CardTitle>
                     <CardDescription className="px-2 py-1 min-h-12">
-                        {flag.description}
+                        {env.description}
                     </CardDescription>
                     <CardAction>
                     <Button
@@ -84,22 +79,10 @@ return (
                     </Button>
             </CardAction>
                     </CardHeader>
-                <CardContent className="bg-gray-100 rounded-md p-2 mx-4 outline-1">
-                    <h2 className="mb-2 mx-1"> Environments </h2>
-                    <div className="flex gap-2">
-                        {flag.environments.map((type) => 
-                        <Badge
-                            key={type.id}
-                            className={`p-2.5 rounded-full ${type.enabled ? 'bg-green-50 text-green-700' : 'bg-gray-200 text-zinc-500'}`}>
-                            {type.name}
-                        </Badge>
-                        )}
-                    </div>
-                </CardContent>
             </Card> )
             :
             <>
-                <h2> No flags yet. </h2>
+                <h2> No environments yet. </h2>
             </>
             }
                 </div>

@@ -1,9 +1,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, useForm, useWatch } from "react-hook-form"
+import { Controller, useForm} from "react-hook-form"
 import * as z from "zod"
 import { useRouter } from "next/navigation";
 import { useCreateFlags } from "../hooks/useCreateFlag";
+import { useGetEnvironment } from "@/features/environments/hooks/useGetEnvironments";
 import { Button } from "@/components/ui/button"
 import Loader from "@/components/shared/Loader";
 import {
@@ -25,7 +26,6 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group"
 import { Switch } from "@/components/ui/switch"
-import { Plus, X } from "lucide-react";
 
 const formSchema = z.object({
   name: z
@@ -34,11 +34,7 @@ const formSchema = z.object({
   description: z
     .string()
     .optional(),
-  developmentEnabled: z.boolean(),
-  stagingExists: z.boolean(),
-  stagingEnabled: z.boolean(),
-  productionExists: z.boolean(),
-  productionEnabled: z.boolean(),
+  environments: z.record(z.string(), z.boolean().catch(false)) 
 })
 
 interface NewFlagFormProps {
@@ -48,8 +44,15 @@ interface NewFlagFormProps {
 
 
 export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
-  const { mutate, isPending, error } = useCreateFlags(orgSlug, projectSlug);
-  const errorMessage = (error as Error)?.message;
+  const { 
+    data: environments, 
+    isLoading: isEnvsLoading, 
+    error: envsError
+} = useGetEnvironment(projectSlug, orgSlug)
+
+  const { mutate, isPending, error: createError } = useCreateFlags(orgSlug, projectSlug);
+
+  const errorMessage = (createError as Error)?.message;
 
   const router = useRouter()
 
@@ -58,23 +61,12 @@ export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
     defaultValues: {
       name: "",
       description: "",
-      developmentEnabled: false, 
-      stagingExists: false, 
-      stagingEnabled: false,
-      productionExists: false, 
-      productionEnabled: false
-    },
+      environments: environments 
+      ? Object.fromEntries(environments.map(e => [e.id, false])) 
+      : {}
+    }
   })
 
-  const stagingExists = useWatch({
-    control: form.control,
-    name: "stagingExists"
-  })
-  
-  const productionExists = useWatch({
-    control: form.control,
-    name: "productionExists"
-  })
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     mutate({
@@ -83,6 +75,14 @@ export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
         data: data         
     });
     }
+
+     if (isEnvsLoading) { 
+            return <Loader />
+        }
+    
+        if (envsError?.message === "ENV_NOT_FOUND") {
+            return <h1> Env Not Found </h1>;
+        }
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
@@ -148,87 +148,28 @@ export default function NewFlagForm({ projectSlug, orgSlug}: NewFlagFormProps) {
             </FieldGroup>
 
             {/* Environments */}
-            <FieldGroup >
+
+            <FieldGroup>
                 <FieldLabel htmlFor="form-rhf-environment" className="text-lg mt-4"> Environments </FieldLabel>
                 <Field className="flex flex-row">
+                    {environments?.map((env) => (
                 <Controller
-                    name="developmentEnabled"
+                    name={`environments.${env.id}`}
+                    key={env.id}
                     control={form.control}
                     render={({ field }) => (
                         <Field orientation="vertical" className="min-h-16">
-                            <FieldLabel htmlFor="form-rhf-dev" className="text-md my-0"> Development</FieldLabel>
-                            <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                            />
-                        </Field>
-                    )}
-                />
-
-                {/* Staging */}
-                {stagingExists ? ( 
-                    <Controller
-                        name="stagingEnabled"
-                        control={form.control}
-                        render={({ field }) => (
-                            <Field orientation="vertical" className="min-h-16">
-                                <FieldLabel htmlFor="form-rhf-stage" className="text-md my-0"> Staging 
-                                    <Button size="xs" variant="ghost" className="w-fit" type="button"
-                                            onClick={() => {
-                                                form.setValue("stagingExists", false)
-                                                form.setValue("stagingEnabled", false)
-                                            }
-                                        }> 
-                                        <X /> 
-                                    </Button> 
-                                </FieldLabel>
-                                <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                />
-                            </Field>
-                        )}
-                    />  
-                ) : 
-                <Field orientation="horizontal">
-                    <Button type="button" size="sm" variant="outline" className="mt-2" onClick={() => form.setValue("stagingExists", true)}>
-                        <Plus/> Staging
-                    </Button>
-                </Field>
-                }
-              
-                {/* Production */}
-                
-                {productionExists ? 
-                    <Controller
-                    name="productionEnabled"
-                    control={form.control}
-                    render={({ field }) => (
-                        <Field orientation="vertical">
-                            <FieldLabel>Production
-                                <Button size="xs" variant="ghost" className="w-fit" type="button"
-                                            onClick={() => {
-                                                form.setValue("productionExists", false)
-                                                form.setValue("productionEnabled", false)
-                                            }
-                                        }> 
-                                        <X /> 
-                                    </Button> 
+                            <FieldLabel htmlFor="form-rhf-dev" className="text-md my-0"> 
+                                {env.name} 
                             </FieldLabel>
                             <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
+                                checked={field.value ?? false}
+                                onCheckedChange={(checked) => field.onChange(checked)}
                             />
                         </Field>
                     )}
                 />
-            :
-             <Field orientation="horizontal"> 
-                    <Button type="button" size="sm" variant="outline" className="mt-2" onClick={() => form.setValue("productionExists", true)}>
-                        <Plus/> Production
-                    </Button>
-                </Field>   
-            }
+                ))}
                 </Field>
             </FieldGroup>
         </form>

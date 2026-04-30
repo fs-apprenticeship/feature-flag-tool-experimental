@@ -7,11 +7,7 @@ const FeatureFlagInsertSchema = z.object({
     name: z.string()
            .min(2),
     description: z.string().optional(),
-    developmentEnabled: z.boolean(),
-    stagingExists: z.boolean(),
-    stagingEnabled: z.boolean(),
-    productionExists: z.boolean(),
-    productionEnabled: z.boolean(),
+    environments: z.record(z.string(), z.boolean())
 }).strict()
 
 
@@ -73,6 +69,7 @@ export async function POST(req: NextRequest,
             },
             select: { id: true } 
             });
+   
         if (!project) {
             return NextResponse.json({error: "Project or Org not found"}, {status:404})
         }
@@ -88,64 +85,26 @@ export async function POST(req: NextRequest,
         if (flag) {
             return NextResponse.json({error: "A flag with this name already exists"}, {status: 400})
         }
-
-        const envs = await prisma.environment.findMany({
+        
+        const projectEnvs = await prisma.environment.findMany({
             where: {
                 projectId: project.id
             }
         });
 
-        let dev = envs.find(e => e.key === 'development')
-        let staging = envs.find(e => e.key === 'staging')
-        let prod = envs.find(e => e.key === 'production')
-
-        if (!dev) {
-            dev = await prisma.environment.create({
-                data: { 
-                    name: "Development", 
-                    key: "development", 
-                    projectId: project.id,
-                    type: "development"}
-            });
-        }
-
-        if (!staging && body.stagingExists) {
-            staging = await prisma.environment.create({
-                data: { 
-                    name: "Staging", 
-                    key: "staging", 
-                    projectId: project.id, 
-                    type: "staging"
-                }
-            });
-        }
-        if (!prod && body.prodExists) {
-            prod = await prisma.environment.create({
-                data: { 
-                    name: "Production", 
-                    key: "production", 
-                    projectId: project.id,
-                    type: "production" }
-            });
-        }
-
         const result = await prisma.featureFlag.create({
             data: {
-                name: parsed.data.name,
+                name: parsed.data.name.trim(),
                 description: parsed.data.description,
                 projectId: project.id,
-                slug: parsed.data.name.toLowerCase().replace(/ /g, '-'),
-                key:  parsed.data.name.toLowerCase().replace(/ /g, '-'),
+                slug: parsed.data.name.toLowerCase().trim().replace(/ /g, '-'),
+                key:  parsed.data.name.toLowerCase().trim().replace(/ /g, '-'),
                 environments: {
-            create: [
-                {
-                    enabled: parsed.data.developmentEnabled,
-                    environmentId: dev.id
-                },
-                ...((staging && parsed.data.stagingExists) ? [{ enabled: parsed.data.stagingEnabled, environmentId: staging.id }] : []),
-                ...((prod && parsed.data.productionExists) ? [{ enabled: parsed.data.productionEnabled, environmentId: prod.id }] : []),
-            ] 
-        }
+            create: projectEnvs.map((env) => ({
+                environmentId: env.id,
+                enabled: parsed.data.environments?.[env.id] ?? false,
+            })),
+        },
     }, include: { environments: true}
     })
     return NextResponse.json(result, { status: 201 });
