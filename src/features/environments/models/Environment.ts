@@ -34,3 +34,9 @@ export class Environment {
         this.description = row.description;
     }
 }
+
+export interface DeleteFlagOptions {
+  orgSlug: string;
+  projectSlug: string;
+  envId: string;
+}

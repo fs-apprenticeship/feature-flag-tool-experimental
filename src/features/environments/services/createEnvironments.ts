@@ -1,9 +1,9 @@
-import { CreateEnvironment } from "../models/Environment";
+import { CreateEnvironmentInput } from "../models/Environment";
 
 export async function createEnvironment(
     orgSlug: string,
     projectSlug: string,
-    data: CreateEnvironment
+    data: CreateEnvironmentInput
 ) {
     try {
         const response = await fetch(`/api/org/${orgSlug}/projects/${projectSlug}/environments`, {

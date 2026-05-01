@@ -70,6 +70,7 @@ export async function POST(req: NextRequest,
                 projectId: project.id
             }
         })
+    
 
         if (environment) {
             return NextResponse.json({error: "A environment with this name already exists"}, {status: 400})
