@@ -7,6 +7,18 @@ export interface EnvironmentRow {
     type: string;
 }
 
+export type CreateEnvironmentInput = {
+    name: string;
+    description?: string;
+    type?: string;
+};
+
+export interface CreateEnvironmentOptions {
+    orgSlug: string;
+    projectSlug: string;
+    data: CreateEnvironmentInput;
+}
+
 export class Environment {
     id: string;
     name: string; 
