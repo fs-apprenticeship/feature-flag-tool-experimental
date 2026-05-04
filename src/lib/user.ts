@@ -1,10 +1,18 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
+
+export async function getCurrentUser() {
+  const { userId, isAuthenticated } = await auth();
+  if (!isAuthenticated || !userId) {
+    redirect ("/auth-sync");
+  }
+  return userId
+}
 
 export async function findOrCreatePrismaUser() {
-  const { userId, isAuthenticated } = await auth();
-
-  if (!isAuthenticated || !userId) {
+  const userId = await getCurrentUser()
+  if (!userId) {
     return null;
   }
 
