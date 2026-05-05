@@ -79,7 +79,7 @@ export async function POST(req: NextRequest,
             where : {
                 name: parsed.data.name,
                 projectId: project.id
-            }
+            },
         })
 
         if (flag) {

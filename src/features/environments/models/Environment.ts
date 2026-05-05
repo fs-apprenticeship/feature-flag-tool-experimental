@@ -7,16 +7,23 @@ export interface EnvironmentRow {
     type: string;
 }
 
-export type CreateEnvironmentInput = {
+export type EnvironmentInput = {
     name: string;
     description?: string;
-    type?: string;
+    type?: "development" | "staging" | "production";
 };
 
-export interface CreateEnvironmentOptions {
+export interface EditEnvironmentOptions {
+    envId: string;
+    data: EnvironmentInput;
+    projectSlug: string; 
     orgSlug: string;
-    projectSlug: string;
-    data: CreateEnvironmentInput;
+}
+
+export interface CreateEnvironmentOptions {
+    data: EnvironmentInput;
+    projectSlug: string; 
+    orgSlug: string;
 }
 
 export class Environment {
@@ -32,10 +39,11 @@ export class Environment {
         this.name = row.name
         this.key = row.key;
         this.description = row.description;
+        this.type = row.type; 
     }
 }
 
-export interface DeleteFlagOptions {
+export interface DeleteEnvOptions {
   orgSlug: string;
   projectSlug: string;
   envId: string;

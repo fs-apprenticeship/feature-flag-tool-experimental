@@ -5,6 +5,7 @@ import z from "zod";
 const EnvironmentInsertSchema = z.object({
     name: z.string().min(2), 
     description: z.string().optional(),
+    type: z.enum(["development", "staging", "production"]).optional(),
 })
 
 
@@ -70,7 +71,6 @@ export async function POST(req: NextRequest,
                 projectId: project.id
             }
         })
-    
 
         if (environment) {
             return NextResponse.json({error: "A environment with this name already exists"}, {status: 400})
@@ -84,6 +84,7 @@ export async function POST(req: NextRequest,
             description: parsed.data.description,
             projectId: project.id,
             key: parsed.data.name.toLowerCase().trim().replace(/ /g, '-'),
+            type: parsed.data.type 
             }
         });
 

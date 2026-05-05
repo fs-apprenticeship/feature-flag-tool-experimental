@@ -6,22 +6,19 @@ TableHead,
 TableHeader,
 TableRow, 
 } from "@/components/ui/table"
-import { Pencil, PlusIcon } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/shared/Loader";
 import { useGetEnvironment } from "@/features/environments/hooks/useGetEnvironments";
-;
 import { DeleteEnvironmentDialog } from "./DeleteEnvironmentDialog";
-import CreateEnvironmentDialog from "./CreateEnvironmentDialog";
-
+import CreateEnvDialog from "./CreateEnvDialog"
+import EditEnvDialog from "./EditEnvDialog";
 
 interface EnvironmentListProps {
-    projectSlug: string
-    orgSlug: string
+  // initialData: Environment[]; 
+  projectSlug: string
+  orgSlug: string
 }
-
-
 
 export default function EnvironmentList({projectSlug, orgSlug}: EnvironmentListProps) {
 
@@ -31,7 +28,6 @@ export default function EnvironmentList({projectSlug, orgSlug}: EnvironmentListP
     isLoading: isEnvsLoading, 
     error: envsError
 } = useGetEnvironment(projectSlug, orgSlug)
-
     
     if (isEnvsLoading) { 
         return <Loader />
@@ -48,7 +44,7 @@ return (
                 <h2 className="flex text-3xl font-semibold"> 
                 {orgSlug} / { projectSlug }  / environments
                 </h2>
-                <CreateEnvironmentDialog orgSlug={orgSlug} projectSlug={projectSlug} />
+              <CreateEnvDialog orgSlug={orgSlug} projectSlug={projectSlug}/>
             </div>
             <div> 
            <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
@@ -58,7 +54,7 @@ return (
             <TableHead className="w-75 pl-5">Name</TableHead>
             <TableHead className="w-250">Description</TableHead>
              <TableHead className="w-75">Key</TableHead>
-            {/* <TableHead className="w-[300px]">Type</TableHead> */}
+             <TableHead className="w-75">Type</TableHead>
             <TableHead className="text-right pr-5">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -75,20 +71,14 @@ return (
                  <TableCell>
                     {env.key}
                 </TableCell>
-                {/* <TableCell>
-                  <Badge variant="secondary" className="capitalize">
-                    {env.type || "Standard"}
-                  </Badge>
-                </TableCell> */}
+                  <TableCell>
+                    {env.type}
+                </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button variant="ghost" size="icon" className="hover:text-blue-600">
-                      <Pencil className="h-4 w-4" />
-                    </Button>
+                    <EditEnvDialog orgSlug={orgSlug} projectSlug={projectSlug} envId={env.id} 
+                    initialData={{name: env.name, description: env.description, type: env.type as "development"}}/> 
                     <DeleteEnvironmentDialog orgSlug={orgSlug} projectSlug={projectSlug} envId={env.id} /> 
-                    {/* <Button variant="ghost" size="icon" className="hover:text-red-600"> */}
-                    
-                    {/* </Button> */}
                   </div>
                 </TableCell>
               </TableRow>

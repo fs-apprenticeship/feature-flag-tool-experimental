@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { DeleteFlagOptions, Environment } from "../models/Environment";
+import { DeleteEnvOptions, Environment } from "../models/Environment";
 import { EnvironmentKeys } from "./keys";
 import { deleteEnvironment } from "../services/deleteEnvironment";
 
@@ -9,7 +9,7 @@ export const useDeleteEnvironment = (orgSlug: string, projectSlug: string) => {
   return useMutation({
     mutationKey: EnvironmentKeys.delete(),
 
-    mutationFn: ({ envId }: DeleteFlagOptions) =>
+    mutationFn: ({ envId }: DeleteEnvOptions) =>
       deleteEnvironment(orgSlug, projectSlug, envId),
 
     onSuccess: (_, variables) => {
