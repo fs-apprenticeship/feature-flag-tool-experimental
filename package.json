@@ -33,6 +33,7 @@
   "devDependencies": {
     "@prisma/adapter-pg": "^7.7.0",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^20.19.39",
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
