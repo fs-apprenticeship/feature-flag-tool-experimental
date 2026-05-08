@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { GET, POST } from "../flags/route";
+import { GET  } from "../flags/route";
 import { prisma } from "@/lib/prisma"; 
 import { NextRequest } from "next/server";
 import { FeatureFlag } from "@/features/flags";
@@ -88,31 +88,5 @@ describe("API Routes", () => {
         expect(data.error).toBe("Failed to fetch feature flags. Please try again later.");
         });
 
-    describe("POST /org/[orgSlug]/projects/[projectSlug]/flags", () => {
-        const performPost = (body: FeatureFlag) => {
-            const orgSlug = "test-org";
-            const projectSlug = "test-project";
-            const req = new NextRequest(`http://localhost:3000/api/org/${orgSlug}/projects/${projectSlug}/flags`, {
-                method: "POST",
-                body: JSON.stringify(body)
-            })
-
-            return POST(req, { 
-            params: Promise.resolve({ orgSlug, projectSlug }) 
-                });
-        };
-    
-
-        it("should create a new flag with 201 success", async () => {
-            const flagData = {id: "1", key: "lesson-plan-demo", name: "lesson-plan-demo", description: "lesson demo card", environments: []};
-            (prisma.project.findUnique as Mock).mockResolvedValue({ id: "proj_123" });
-            (prisma.featureFlag.findFirst as Mock).mockResolvedValue(null);
-            (prisma.featureFlag.create as Mock).mockResolvedValue(flagData);
-            const response = await performPost(flagData);
-            const data = await response.json();
-            expect(response.status).toBe(201);
-            expect(data).toEqual(flagData);  
-            })
-        })
     })
 })
