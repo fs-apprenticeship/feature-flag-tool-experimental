@@ -6,6 +6,7 @@
     "dev": "prisma studio --browser none & next dev",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
     "lint": "eslint",
     "seed": "tsx prisma/seed.ts",
     "db-reset": "tsx prisma migrate reset"
