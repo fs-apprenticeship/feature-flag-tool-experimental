@@ -43,8 +43,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ orgSlug:
     });
   return NextResponse.json(flags);
 } catch (error) {
-    console.error("Prisma Error:", error);
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    console.error("Prisma Error", error);
+    return Response.json({ error: "Failed to fetch feature flags. Please try again later."}, { status: 500 });
   }
 }
 
@@ -70,6 +70,7 @@ export async function POST(req: NextRequest,
             select: { id: true } 
             });
    
+            
         if (!project) {
             return NextResponse.json({error: "Project or Org not found"}, {status:404})
         }
