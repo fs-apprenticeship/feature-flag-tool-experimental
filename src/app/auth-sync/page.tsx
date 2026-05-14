@@ -1,6 +1,7 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { findOrCreatePrismaUser } from "@/lib/user";
+import { findOrCreatePrismaUser, } from "@/lib/user";
+import { getOrgStatus } from "@/lib/org";
 import { RedirectToSignIn } from "@clerk/nextjs";
 
 export default async function AuthSyncPage() {
@@ -12,5 +13,11 @@ export default async function AuthSyncPage() {
 
   await findOrCreatePrismaUser();
 
-  redirect("/");
+  const { hasOrg, orgSlug } = await getOrgStatus();
+  
+    if (!hasOrg) {
+      redirect("/org/new");
+    }
+  
+    redirect(`/org/${orgSlug}`);
 }
