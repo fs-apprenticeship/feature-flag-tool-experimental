@@ -2,9 +2,14 @@
   "name": "feature-flag-tool-experimental",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "packages/js-sdk"
+  ],
   "scripts": {
     "dev": "prisma studio --browser none & next dev",
-    "build": "next build",
+    "build": "npm run build --workspace @feature-flag-tool/js-sdk && next build",
+    "build:app": "next build",
+    "build:sdk": "npm run build --workspace @feature-flag-tool/js-sdk",
     "start": "next start",
     "test": "vitest run",
     "lint": "eslint",
