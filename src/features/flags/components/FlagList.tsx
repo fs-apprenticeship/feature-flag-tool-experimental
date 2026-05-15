@@ -70,7 +70,7 @@ return (
                     <Button
                     variant="ghost"
                     size="icon"
-                    // onClick={() => onEdit(flag.id)}
+                    onClick={() => router.push(`/org/${orgSlug}/projects/${projectSlug}/flags/${flag.id}/edit`)}
                     className="text-neutral-400 hover:text-[#00B3E6]"
                     >
                     <Pencil className="h-4 w-4" />
@@ -78,7 +78,7 @@ return (
                     <Button
                     variant="ghost"
                     size="icon"
-                    //   onClick={() => onDelete(flag.id)}
+                    onClick={() => router.push(`/org/${orgSlug}/projects/${projectSlug}/flags/${flag.id}/delete`)}
                     className="text-neutral-400 hover:text-red-500"
                     >
                     <Trash2 />
