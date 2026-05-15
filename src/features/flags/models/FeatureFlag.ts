@@ -1,29 +1,33 @@
 export interface FlagEnvironment {
   id: string;
   name: string;
-  type: string;
+  type: string | null;
   enabled: boolean;
 }
 
 export interface FlagRow {
-    id: string;
-    projectId: string;
-    name: string;
-    key: string;
-    description: string; 
-    slug: string;
-    environments: Array<{
+  id: string;
+  projectId: string;
+  name: string;
+  key: string;
+  description: string;
+  slug: string;
+  environments: Array<{
     enabled: boolean;
     environment: {
-    id: string;
-    name: string;
-    type: string;
-    createdAt: string;
-    updatedAt: string;
-    }}>
+      id: string;
+      name: string;
+      type: string | null;
+      createdAt: string;
+      updatedAt: string;
+    };
+  }>;
 }
 
-export type CreateFeatureFlag = Omit<FeatureFlag, 'id' | 'environments'| 'key'>;
+export type CreateFeatureFlag = Omit<
+  FeatureFlag,
+  "id" | "environments" | "key"
+>;
 
 export interface CreateFlagOptions {
   orgSlug: string;
@@ -32,21 +36,21 @@ export interface CreateFlagOptions {
 }
 
 export class FeatureFlag {
-    id: string;
-    name: string;
-    key: string
-    description?: string;
-    environments: FlagEnvironment[];
-    constructor(row: FlagRow) {
-        this.id = row.id;
-        this.name = row.name;
-        this.key = row.key;
-        this.description = row.description;
-        this.environments = row.environments.map((item) => ({
-            id: item.environment.id,
-            name: item.environment.name,
-            type: item.environment.type,
-            enabled: item.enabled,
+  id: string;
+  name: string;
+  key: string;
+  description?: string;
+  environments: FlagEnvironment[];
+  constructor(row: FlagRow) {
+    this.id = row.id;
+    this.name = row.name;
+    this.key = row.key;
+    this.description = row.description;
+    this.environments = row.environments.map((item) => ({
+      id: item.environment.id,
+      name: item.environment.name,
+      type: item.environment.type,
+      enabled: item.enabled,
     }));
   }
 }
@@ -59,8 +63,6 @@ export interface UpdateFeatureFlag {
     enabled: boolean;
   }[];
 }
-
-
 
 export interface EditFlagOptions {
   orgSlug: string;

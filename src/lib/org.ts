@@ -6,6 +6,10 @@ import { prisma } from "@/lib/prisma";
 export async function getOrgStatus() {
   const { userId } = await auth();
 
+  if (!userId) {
+    redirect("/auth-sync");
+  }
+
   const user = await prisma.user.findUnique({
     where: { clerkId: userId },
     include: {
@@ -19,6 +23,14 @@ export async function getOrgStatus() {
       },
     },
   });
+
+  if (!user) {
+    return {
+      user,
+      hasOrg: false,
+      orgSlug: null,
+    };
+  }
 
   const org = user.memberships[0]?.organization;
 
