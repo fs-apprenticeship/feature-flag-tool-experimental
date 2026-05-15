@@ -1,46 +1,46 @@
 export interface EnvironmentRow {
-    id: string;
-    name: string; 
-    projectId: string;
-    key: string; 
-    description: string
-    type: string;
+  id: string;
+  name: string;
+  projectId: string;
+  key: string;
+  description: string;
+  type: string | null;
 }
 
 export type EnvironmentInput = {
-    name: string;
-    description?: string;
-    type?: "development" | "staging" | "production";
+  name: string;
+  description?: string;
+  type?: "development" | "staging" | "production";
 };
 
 export interface EditEnvironmentOptions {
-    envId: string;
-    data: EnvironmentInput;
-    projectSlug: string; 
-    orgSlug: string;
+  envId: string;
+  data: EnvironmentInput;
+  projectSlug: string;
+  orgSlug: string;
 }
 
 export interface CreateEnvironmentOptions {
-    data: EnvironmentInput;
-    projectSlug: string; 
-    orgSlug: string;
+  data: EnvironmentInput;
+  projectSlug: string;
+  orgSlug: string;
 }
 
 export class Environment {
-    id: string;
-    name: string; 
-    projectId: string;
-    key: string;
-    description?: string;
-    type?: string; 
-    constructor(row: Environment) {
-        this.id = row.id
-        this.projectId = row.projectId
-        this.name = row.name
-        this.key = row.key;
-        this.description = row.description;
-        this.type = row.type; 
-    }
+  id: string;
+  name: string;
+  projectId: string;
+  key: string;
+  description?: string;
+  type?: string | null;
+  constructor(row: Environment) {
+    this.id = row.id;
+    this.projectId = row.projectId;
+    this.name = row.name;
+    this.key = row.key;
+    this.description = row.description;
+    this.type = row.type;
+  }
 }
 
 export interface DeleteEnvOptions {
