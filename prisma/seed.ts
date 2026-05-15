@@ -24,6 +24,11 @@ import "dotenv/config";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
+import {
+  generateSDKKey,
+  getSDKKeyPrefix,
+  hashSDKKey,
+} from "../src/lib/sdkKey";
 
 const connectionString = process.env.DATABASE_URL!;
 const pool = new Pool({ connectionString });
@@ -253,6 +258,51 @@ async function main() {
       enabled: true,
     },
   });
+
+  const seededSDKKeys: Array<{
+    environment: string;
+    plaintext: string;
+  }> = [];
+
+  for (const environment of [developmentEnv, productionEnv]) {
+    const name = `Seed ${environment.name} SDK Key`;
+    const existingSDKKey = await prisma.sDKKey.findFirst({
+      where: {
+        projectId: project.id,
+        environmentId: environment.id,
+        name,
+        revokedAt: null,
+      },
+    });
+
+    if (existingSDKKey) {
+      continue;
+    }
+
+    const plaintext = generateSDKKey();
+
+    await prisma.sDKKey.create({
+      data: {
+        projectId: project.id,
+        environmentId: environment.id,
+        name,
+        keyHash: hashSDKKey(plaintext),
+        keyPrefix: getSDKKeyPrefix(plaintext),
+      },
+    });
+
+    seededSDKKeys.push({
+      environment: environment.key,
+      plaintext,
+    });
+  }
+
+  if (seededSDKKeys.length > 0) {
+    console.info("Seeded SDK keys. Store these plaintext values now:");
+    for (const sdkKey of seededSDKKeys) {
+      console.info(`${sdkKey.environment}: ${sdkKey.plaintext}`);
+    }
+  }
 
   const seededData = await prisma.organization.findUnique({
     where: { id: organization.id },
