@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {  } from '../models/Organization';
 import { orgKeys } from '../../orgs/hooks/keys';
 import { createOrg } from '../services/createOrg';
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {CreateOrgOptions, Organization } from '../models/Organization';
 
 export const useCreateOrg = () => {
